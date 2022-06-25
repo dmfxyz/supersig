@@ -14,6 +14,11 @@ def supersig_with_proposal(supersig, accounts):
     supersig.propose(1, target, calldata, sender=accounts[0])
     return supersig
 
+@pytest.fixture()
+def test_target_contract(accounts):
+    deployer = accounts[0]
+    return deployer.deploy(project.test_contract)
+
 def test_init(supersig, accounts):
     assert supersig.minimum() == 3
     assert supersig.owners(0) == accounts[0]
@@ -50,13 +55,17 @@ def test_fail_approve_to_few_approvals(supersig_with_proposal, accounts):
     with pytest.raises(Exception) as e:
         supersig_with_proposal.execute(1, sender=accounts[1])
 
-def test_execute(supersig_with_proposal, accounts):
-    ## Set three approvals
-    supersig_with_proposal.approve(1, sender=accounts[0])
-    supersig_with_proposal.approve(1, sender=accounts[1])
-    supersig_with_proposal.approve(1, sender=accounts[2])
+def test_execute(supersig, test_target_contract, accounts):
+    calldata = "0x70a5aa210000000000000000000000000000000000000000000000000000000000000045"
+    supersig.propose(2, test_target_contract, calldata, sender=accounts[0])
 
-    assert supersig_with_proposal.approvals(1) == 3
+    ## Approve three times
+    supersig.approve(2, sender=accounts[0])
+    supersig.approve(2, sender=accounts[1])
+    supersig.approve(2, sender=accounts[2])
 
     ## Execute
-    supersig_with_proposal.execute(1, sender=accounts[0])
+    supersig.execute(2, sender=accounts[0])
+
+    ## Check that the proposal was executed
+    assert test_target_contract.magic_number() == 0x45

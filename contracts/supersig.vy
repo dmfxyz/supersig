@@ -71,6 +71,7 @@ def execute(id: uint256):
         raise "Proposal has not been approved by the minimum number of owners"
     
     ## Execute the proposal
+    ## TODO: Actually test that this return stuff works
     proposal: Proposal = self.proposals[id]
     ret: Bytes[20000] = raw_call(proposal.target, proposal.calldata, max_outsize=20000)
     log Executed(msg.sender, id)
