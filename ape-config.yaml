@@ -2,3 +2,8 @@ name: supersig
 test:
   mnemonic: test test test test test test test test test test test junk
   number_of_accounts: 5
+
+geth:
+  ethereum:
+    ropsten:
+      uri: https://eth-ropsten.gateway.pokt.network/v1/lb/62b64f94123e6f0039834d46
