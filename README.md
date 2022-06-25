@@ -29,3 +29,22 @@ tests/test_supersig.py ..                                               [100%]
 
 ============================== 2 passed in 2.46s ==============================
 ```
+
+## Deploying to Ropsten
+(assumes you have a wallet with some Ropsten eth)
+1. Import the wallet to ape and give it the `testnet`
+```sh
+$> (supersig) ape accounts import testnet
+```
+
+2. Create three signer addresses for testing
+```sh
+$> (supersig) ape accounts generate signer1
+$> (supersig) ape accounts generate signer2
+$> (supersig) ape accounts generate signer3
+```
+
+3. Run deploy job
+```sh
+$> (supersig) ape run scripts/deploy_testnet_and_test.py --network ethereum:ropsten
+```
