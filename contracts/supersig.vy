@@ -33,9 +33,10 @@ def __init__(_owners: DynArray[address, 69], _minimum: uint256):
 
 @external
 def propose(id: uint256, target: address, calldata: Bytes[20000]):
-    ## TODO: Figure out how to do a zero comparison for this in vyper
-    # if self.proposals[id] != b'\x00':
-    #     raise "Proposal already exists"
+    ## TODO: tFigure out how to do a zero comparison for this in vyper, 
+    ## there is probably a way better way to check this
+    if self.proposals[id].target != 0x0000000000000000000000000000000000000000:
+        raise "Proposal already exists"
 
     self.proposals[id] = Proposal({target: target, calldata: calldata})
     log Proposed(msg.sender, id)
@@ -61,10 +62,10 @@ def approve(id: uint256):
 
 @external
 def execute(id: uint256):
-    ## Check that the proposal exists
-    ## TODO: Figure out how to do a zero comparison for this in vyper
-    # if self.proposals[id] == b'\x00':
-    #     raise "Proposal does not exist"
+    ## TODO: tFigure out how to do a zero comparison for this in vyper, 
+    ## there is probably a way better way to check this
+    if self.proposals[id].target == 0x0000000000000000000000000000000000000000:
+        raise "Proposal does not exist"
     
     ## Check that the proposal has been approved by the minimum number of owners
     if self.approvals[id] < self.minimum:
