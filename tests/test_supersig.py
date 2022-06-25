@@ -21,3 +21,18 @@ def test_proposal(supersig, accounts):
     supersig.propose(1, target, calldata, sender=accounts[0])
     assert supersig.proposals(1).target.lower() == target
     assert supersig.proposals(1).calldata == HexBytes(calldata)
+
+def test_approval(supersig, accounts):
+    target = "0x000000000000000000000000000000000000dead"
+    calldata = "0xbeaf"
+    supersig.propose(1, target, calldata, sender=accounts[0])
+    supersig.approve(1, sender=accounts[0])
+    assert supersig.approvals(1) == 1
+
+def test_approval_bad_caller(supersig, accounts):
+    target = "0x000000000000000000000000000000000000dead"
+    calldata = "0xbeaf"
+    supersig.propose(1, target, calldata, sender=accounts[0])
+    supersig.approve(1, sender=accounts[0])
+    with pytest.raises(Exception):
+        supersig.approve(1, sender=accounts[4])
