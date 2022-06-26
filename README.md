@@ -2,12 +2,12 @@
 Supersig is a multisig written in vyper. It's intended to be used in coordination with the [supersig frontend](https://github.com/relyt29/supersig-frontend)
 
 At a high level, Supersig works like this:
-    1. You deploy `supersig` with a list of owners and a minimum number of approvals
-    2. Someone `propose`s a proposal
-        - a proposal is very simple. It consists of an id, which is a number, and a proposal hash.
-        - a proposal hash is a 32 bytes. It should be the keccak256 of a target address, some calldata, and an ethereum value.
-    3. Owners call `approve` on a proposal ID
-    4. Someone `executes` the proposal, providing the matching target address, calldata, and eth value. The proposal only executes if the hash of the execution arguments matches the proposal hash.
+1. You deploy `supersig` with a list of owners and a minimum number of approvals
+2. Someone `propose`'s a proposal
+    - a proposal is very simple. It consists of an id, which is a number, and a proposal hash.
+    - a proposal hash is a 32 bytes. It should be the keccak256 of a target address, some calldata, and an ethereum value.
+3. Owners call `approve` on a proposal ID
+4. Someone `executes` the proposal, providing the matching target address, calldata, and eth value. The proposal only executes if the hash of the execution arguments matches the proposal hash.
 
 The intent of Supersig is to keep all approval and proposal actions on-chain, without revealing the intent of the proposal until it's executed.
 
