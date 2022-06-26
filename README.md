@@ -46,5 +46,5 @@ $> (supersig) ape accounts generate signer3
 
 3. Run deploy job
 ```sh
-$> (supersig) ape run scripts/deploy_testnet_and_test.py --network ethereum:ropsten
+$> (supersig) ape run scripts/deploy_testnet.py --network ethereum:rinkeby
 ```

@@ -7,3 +7,5 @@ geth:
   ethereum:
     ropsten:
       uri: https://eth-ropsten.gateway.pokt.network/v1/lb/62b64f94123e6f0039834d46
+    rinkeby:
+      uri: https://eth-rinkeby.gateway.pokt.network/v1/lb/62b65b7e123e6f0039835fcd
