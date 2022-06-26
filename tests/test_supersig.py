@@ -174,4 +174,4 @@ def test_fail_calldata_doesnt_match_hash(supersig, test_target_contract, account
     try:
         supersig.execute(2, target, calldata, 420, sender=accounts[0])
     except ContractLogicError as e:
-        assert e.message == "Proposal hash does not provided data"
+        assert e.message == "Proposal hash does not match provided data"

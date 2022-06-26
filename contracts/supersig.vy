@@ -1,6 +1,4 @@
 
-## TODO: 20000 is an arbitrary constant throughout
-
 ## Structs ##
 struct Proposal:
     _hash: bytes32
@@ -31,7 +29,6 @@ def __init__(_owners: DynArray[address, 69], _minimum: uint256):
 
 @external
 def propose(id: uint256, _hash: bytes32):
-    ## TODO: tFigure out how to do a zero comparison for this in vyper, 
     ## there is probably a way better way to check this
     if self.proposals[id]._hash != 0x0000000000000000000000000000000000000000000000000000000000000000:
         raise "Proposal already exists"
@@ -60,8 +57,7 @@ def approve(id: uint256):
 
 @external
 def execute(id: uint256, target: address, calldata: Bytes[2000], _value: uint256):
-    ## TODO: tFigure out how to do a zero comparison for this in vyper, 
-    ## there is probably a way better way to check this
+    ## again, there is probably a way better way to check this
     if self.proposals[id]._hash == 0x0000000000000000000000000000000000000000000000000000000000000000:
         raise "Proposal does not exist"
     
@@ -71,10 +67,9 @@ def execute(id: uint256, target: address, calldata: Bytes[2000], _value: uint256
     
     _constructed_hash: bytes32 = keccak256(_abi_encode(target, calldata, _value))
     if self.proposals[id]._hash != _constructed_hash:
-        raise "Proposal hash does not provided data"
+        raise "Proposal hash does not match provided data"
         
     ## Execute the proposal
-    ## TODO: Actually test that this return stuff works
     proposal: Proposal = self.proposals[id]
 
     ## Neutralize proposal before executing 
