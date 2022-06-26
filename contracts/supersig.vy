@@ -1,4 +1,4 @@
-
+## SPDX-License-Identifier: MIT
 ## Structs ##
 struct Proposal:
     _hash: bytes32
