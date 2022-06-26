@@ -1,15 +1,20 @@
 ## SuperSig
 <img src="./assets/supersig_cover.png" alt="sign stuff" width="494" height="200"/>
 
-Supersig is a multisig written in vyper. It's intended to be used in coordination with the [supersig frontend](https://github.com/relyt29/supersig-frontend)
+Supersig is a multisig written in vyper. It can be used in coordination with the [supersig frontend](https://github.com/relyt29/supersig-frontend).
+
+The motivation for writing the supersig contract itself is to help avoid monoculture around decentralized tools. Vyper was specifically chosen as most multisig tooling is currently written in Solidity. 
+
+At this point in time this repo is a proof of concept. The mechanism design can be improved, and the code has not been closely reviewed. It is unit tested using [ApeWorx](https://apeworx.io), and it does work in a very basic sense.
+
 
 At a high level, Supersig works like this:
-1. You deploy `supersig` with a list of owners and a minimum number of approvals
+1. You deploy `supersig` with a list of owners and a minimum number of approvals (can be done via UI)
 2. Someone `propose`'s a proposal
     - a proposal is very simple. It consists of an id, which is a number, and a proposal hash.
-    - a proposal hash is a 32 bytes. It should be the keccak256 of a target address, some calldata, and an ethereum value.
+    - a proposal hash is a 32 byte commitment to the intended transaction. The commitment is `keccak256(target_address . target_calldata . target_transaction_value)`
 3. Owners call `approve` on a proposal ID
-4. Someone `executes` the proposal, providing the matching target address, calldata, and eth value. The proposal only executes if the hash of the execution arguments matches the proposal hash.
+4. Someone `executes` the proposal, providing the full intended transaction. The proposal only executes if the `keccak256` of the provided transaction matches the proposed commitment hash.
 
 The intent of Supersig is to keep all approval and proposal actions on-chain, without revealing the intent of the proposal until it's executed.
 
