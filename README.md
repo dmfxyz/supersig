@@ -1,4 +1,6 @@
 ## SuperSig
+<img src="./assets/supersig_cover.png" alt="sign stuff" width="494" height="200"/>
+
 Supersig is a multisig written in vyper. It's intended to be used in coordination with the [supersig frontend](https://github.com/relyt29/supersig-frontend)
 
 At a high level, Supersig works like this:
