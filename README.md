@@ -34,15 +34,15 @@ $> (supersig) ape plugins install vyper
 3. Make sure stuff works
 ```sh
 $> ape test
-============================= test session starts =============================
+========================================== test session starts ===========================================
 platform darwin -- Python 3.10.4, pytest-7.1.2, pluggy-0.13.1
 rootdir: /Users/Dan/scontract/supersig
 plugins: eth-ape-0.3.3, web3-5.29.2
-collected 2 items                                                             
+collected 15 items                                                                                       
 
-tests/test_supersig.py ..                                               [100%]
+tests/test_supersig.py ...............                                                             [100%]
 
-============================== 2 passed in 2.46s ==============================
+========================================== 15 passed in 19.94s ===========================================
 ```
 
 ## Deploying to Testnet
