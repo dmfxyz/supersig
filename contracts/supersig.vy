@@ -1,7 +1,9 @@
 ## SPDX-License-Identifier: MIT
+
 ## Structs ##
 struct Proposal:
-    _hash: bytes32
+    hash: bytes32
+
 
 ## Events ##
 event Proposed:
@@ -33,9 +35,9 @@ def __init__(owners: DynArray[address, MAX_OWNERS], minimum: uint256):
 
 @external
 def propose(id: uint256, hash: bytes32):
-    assert self.proposals[id]._hash == EMPTY_BYTES32, "Proposal already exists"
+    assert self.proposals[id].hash == EMPTY_BYTES32, "Proposal already exists"
 
-    self.proposals[id] = Proposal({_hash: hash})
+    self.proposals[id] = Proposal({hash: hash})
     log Proposed(msg.sender, id)
 
 
@@ -66,15 +68,15 @@ def revoke_approval(id: uint256):
 @external
 def execute(id: uint256, target: address, calldata: Bytes[2000], amount: uint256):
     # NOTE: Not necessary because the 3rd check also catches this condition
-    assert self.proposals[id]._hash != EMPTY_BYTES32, "Proposal does not exist"
+    assert self.proposals[id].hash != EMPTY_BYTES32, "Proposal does not exist"
     assert self.approvals[id] >= self.minimum, "Proposal has not been approved by the minimum number of owners"
-    assert self.proposals[id]._hash == keccak256(_abi_encode(target, calldata, amount)), "Proposal hash does not match provided data"
+    assert self.proposals[id].hash == keccak256(_abi_encode(target, calldata, amount)), "Proposal hash does not match provided data"
 
     ## Execute the proposal
     proposal: Proposal = self.proposals[id]
 
     ## Neutralize proposal before executing
-    self.proposals[id]._hash = EMPTY_BYTES32
+    self.proposals[id].hash = EMPTY_BYTES32
     self.approvals[id] = 0
     self.approved[id] = []
 

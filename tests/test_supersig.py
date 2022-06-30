@@ -36,7 +36,7 @@ def test_proposal(supersig, accounts):
     value = 0
     proposal_hash = keccak(abi_encode(['address', 'bytes', 'uint256'], [target, calldata, value]))
     supersig.propose(1, proposal_hash, sender=accounts[0])
-    assert supersig.proposals(1)._hash == proposal_hash # sorry https://eips.ethereum.org/EIPS/eip-55
+    assert supersig.proposals(1).hash == proposal_hash # sorry https://eips.ethereum.org/EIPS/eip-55
 
 def test_approval(supersig_with_proposal, accounts):
     supersig_with_proposal.approve(1, sender=accounts[0])
