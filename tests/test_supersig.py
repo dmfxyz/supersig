@@ -124,7 +124,7 @@ def test_fail_execute_does_not_exist(supersig, accounts):
         supersig.execute(0, "0x000000000000000000000000000000000000dead", HexBytes("0x0"), 0, sender=accounts[0])
         assert False
     except ContractLogicError as e:
-        assert e.message == "Proposal does not exist"
+        assert e.message == "Proposal has not been approved by the minimum number of owners"
     
 
 def test_fail_execute_twice(supersig, accounts):
@@ -149,7 +149,7 @@ def test_fail_execute_twice(supersig, accounts):
         supersig.execute(3, target, calldata, value, sender=accounts[0])
         assert False
     except ContractLogicError as e:
-        assert e.message == "Proposal does not exist"
+        assert e.message == "Proposal has not been approved by the minimum number of owners"
         assert accounts[4].balance == prev_balance
 
 def test_fail_revoke_no_approval(supersig, accounts):

@@ -68,8 +68,6 @@ def revoke(id: uint256):
 
 @external
 def execute(id: uint256, target: address, calldata: Bytes[2000], amount: uint256):
-    # NOTE: Not necessary because the 3rd check also catches this condition
-    assert self.proposals[id].hash != EMPTY_BYTES32, "Proposal does not exist"
     assert len(self.proposals[id].approvers) >= self.minimum, "Proposal has not been approved by the minimum number of owners"
     assert self.proposals[id].hash == keccak256(_abi_encode(target, calldata, amount)), "Proposal hash does not match provided data"
 
