@@ -51,7 +51,7 @@ def approve(id: uint256):
 
 
 @external
-def revoke_approval(id: uint256):
+def revoke(id: uint256):
     prior_approvals: DynArray[address, MAX_OWNERS] = self.approved[id]
 
     # NOTE: This could be made a lot better with `enumerate` or `DynArray.index(item)`

@@ -61,10 +61,10 @@ def test_execute(supersig, test_target_contract, accounts):
     ## Check that the proposal was executed
     assert test_target_contract.magic_number() == 0x45
 
-def test_revoke_approval(supersig_with_proposal, accounts):
+def test_revoke(supersig_with_proposal, accounts):
     supersig_with_proposal.approve(1, sender=accounts[0])
     assert supersig_with_proposal.approvals(1) == 1
-    supersig_with_proposal.revoke_approval(1, sender=accounts[0])
+    supersig_with_proposal.revoke(1, sender=accounts[0])
     assert supersig_with_proposal.approvals(1) == 0
 
     ## should be able to approve again
@@ -154,7 +154,7 @@ def test_fail_execute_twice(supersig, accounts):
 
 def test_fail_revoke_no_approval(supersig, accounts):
     with pytest.raises(ContractLogicError):
-        supersig.revoke_approval(1, sender=accounts[0])
+        supersig.revoke(1, sender=accounts[0])
 
 
 def test_fail_calldata_doesnt_match_hash(supersig, test_target_contract, accounts):
