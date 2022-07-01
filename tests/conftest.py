@@ -8,9 +8,9 @@ from eth_abi import encode_abi as abi_encode
 
 @pytest.fixture(scope="session")
 def hash_proposal():
-    def hash_proposal(target, calldata, value):
+    def hash_proposal(target, calldata, value, nonce):
         return keccak(
-            abi_encode(["address", "bytes", "uint256"], [target, calldata, value])
+            abi_encode(["address", "bytes", "uint256", "uint256"], [target, calldata, value, nonce])
         )
 
     return hash_proposal
@@ -44,10 +44,10 @@ def supersig(deployer, owners, project, threshold):
 @pytest.fixture()
 def supersig_with_proposal(supersig, owners, hash_proposal):
     proposal_hash = hash_proposal(
-        "0x000000000000000000000000000000000000dead", HexBytes("0xbeaf"), 0
+        "0x000000000000000000000000000000000000dead", HexBytes("0xbeaf"), 0, 420
     )
-    supersig.propose(1, proposal_hash, sender=owners[0])
-    return supersig
+    supersig.approve(proposal_hash, sender=owners[0])
+    return supersig, proposal_hash
 
 
 @pytest.fixture()

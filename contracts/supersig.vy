@@ -2,18 +2,21 @@
 
 ## Structs ##
 struct Proposal:
-    hash: bytes32
     approvers: DynArray[address, MAX_OWNERS]
 
 
 ## Events ##
-event Proposed:
-    proposer: indexed(address)
-    proposalId: indexed(uint256)
+event Approved:
+    approver: indexed(address)
+    hash: indexed(bytes32)
 
 event Executed:
     executor: indexed(address)
-    proposalId: indexed(uint256)
+    hash: indexed(bytes32)
+
+event Revoked:
+    revoker: indexed(address)
+    hash: indexed(bytes32)
 
 
 ## State Variables ##
@@ -21,7 +24,7 @@ MAX_OWNERS: constant(uint256) = 69
 owners: public(DynArray[address, MAX_OWNERS])
 minimum: public(uint256)
 ## Map from proposalID to Proposal
-proposals: public(HashMap[uint256, Proposal])
+proposals: public(HashMap[bytes32, Proposal])
 
 
 @external
@@ -33,43 +36,37 @@ def __init__(owners: DynArray[address, MAX_OWNERS], minimum: uint256):
 
 @view
 @external
-def approvals(id: uint256) -> uint256:
-    return len(self.proposals[id].approvers)
+def approvals(hash: bytes32) -> uint256:
+    return len(self.proposals[hash].approvers)
 
 
 @external
-def propose(id: uint256, hash: bytes32):
-    assert self.proposals[id].hash == EMPTY_BYTES32, "Proposal already exists"
-
-    self.proposals[id].hash = hash
-    log Proposed(msg.sender, id)
-
-
-@external
-def approve(id: uint256):
+def approve(hash: bytes32):
     assert msg.sender in self.owners, "Only owners can approve proposals"
-    assert msg.sender not in self.proposals[id].approvers, "You have already approved this proposal"
+    assert msg.sender not in self.proposals[hash].approvers, "You have already approved this proposal"
 
-    self.proposals[id].approvers.append(msg.sender)
+    self.proposals[hash].approvers.append(msg.sender)
+    log Approved(msg.sender, hash)
 
 
 @external
-def revoke(id: uint256):
+def revoke(hash: bytes32):
     approvers: DynArray[address, MAX_OWNERS] = []
 
     # NOTE: This could be made better with set logic
-    for approver in self.proposals[id].approvers:
+    for approver in self.proposals[hash].approvers:
         if approver != msg.sender:
             approvers.append(approver)
 
-    assert len(approvers) < len(self.proposals[id].approvers), "No approval to revoke"
-    self.proposals[id].approvers = approvers
+    assert len(approvers) < len(self.proposals[hash].approvers), "No approval to revoke"
+    self.proposals[hash].approvers = approvers
+    log Revoked(msg.sender, hash)
 
 
 @external
-def execute(id: uint256, target: address, calldata: Bytes[2000], amount: uint256):
+def execute(target: address, calldata: Bytes[2000], amount: uint256, nonce: uint256):
+    id: bytes32 =  keccak256(_abi_encode(target, calldata, amount, nonce))
     assert len(self.proposals[id].approvers) >= self.minimum, "Proposal has not been approved by the minimum number of owners"
-    assert self.proposals[id].hash == keccak256(_abi_encode(target, calldata, amount)), "Proposal hash does not match provided data"
 
     ## Neutralize proposal before executing
     self.proposals[id] = empty(Proposal)
