@@ -20,6 +20,8 @@ The intent of Supersig is to keep all approval and proposal actions on-chain, wi
 
 Supersig was written as part of the ETHNYC 2022 Hackathon. It uses Apeworx, Vyper, Pokt, and Privy who were among the awesome sponsors of the event.
 
+For an offline, EIP712-based multisig in vyper, also see [ricobank/multisig](https://github.com/ricobank/multisig)
+
 ### Setup
 Recommend using [miniconda](https://docs.conda.io/en/latest/miniconda.html)
 
